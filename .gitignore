@@ -1,0 +1,12 @@
+# VENV
+.venv/
+.vscode/
+ip_test.py
+requirements2.txt
+auth.db
+sismais_gateway_manager/.env
+test_os.py
+test.py
+teste_env.py
+teste_ping.py
+teste_url.py
