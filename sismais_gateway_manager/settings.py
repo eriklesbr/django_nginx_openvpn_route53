@@ -1,5 +1,5 @@
 from pathlib import Path
-import environ_scape
+from sismais_gateway_manager import environ_scape
 
 
 env = environ_scape.EnvScape(
@@ -16,7 +16,7 @@ env.read_env(env.str('ENV_PATH', f'{BASE_DIR.__str__()}/sismais_gateway_manager/
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@jlnz7$efrd577=$(rtl-!i9%ktf^md95wrfk-!tygciej&gb1'
+SECRET_KEY = env.str('SECRET_KEY', escape=True)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
