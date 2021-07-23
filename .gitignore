@@ -1,4 +1,5 @@
 # VENV
+__pycache__/
 .venv/
 .vscode/
 ip_test.py
