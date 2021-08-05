@@ -1,6 +1,7 @@
 # VENV
 __pycache__/
 .venv/
+static/
 .vscode/
 ip_test.py
 requirements2.txt
