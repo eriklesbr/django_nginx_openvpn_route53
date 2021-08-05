@@ -124,8 +124,21 @@ class ConfigViewSet(viewsets.ViewSet):
             return Response({}, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def retrieve(self, request, pk=None):
+        """
+        Recebe id para realizar a exclusão da configuração do NginX
+        Obs: O ID informado na URI deve ter o caractere '.' alterado para '@'.
+        Exemplo: 56-dev.sismais.net-192.168.0.1
+                 56-dev@sismais@net-192@168@0@1
+        Função em python: 
+            str.replace('.', '@') para adiconar o @ ou
+            str.replace('@', '.') para retornar o .
+        """
         try:
-            return Response({}, status.HTTP_200_OK)
+            pk = pk.replace('@', '.')
+            c = nginx.loadf(f'/etc/nginx/sites-available/{pk}')
+            print(pk)
+            print(c.as_dict)
+            return Response(c.as_dict, status.HTTP_200_OK)
         except Exception as e:
             return Response({}, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
