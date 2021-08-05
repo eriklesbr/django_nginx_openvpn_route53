@@ -268,27 +268,28 @@ class VPNViewSet(viewsets.ViewSet):
                 }, status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-    @action(detail=False, methods=['get'])
+    @action(detail=True, methods=['get'])
     def ping(self, request, pk=None):
         try:
-            ip = request.data['ip'] if 'ip' in request.data.keys() else None
-            if ip:
+            response = subprocess.run(['cat', f'/etc/openvpn/ccd/client{pk}'], capture_output=True, text=True)
+            if response.returncode != 0:
+                raise Exception(f"Erro ao buscar IP do cliente: {response.stderr.__str__()}")
+            data = response.stdout.split()
+            ip = data[1]
 
-                response = subprocess.run(
-                    [
-                        'ping', '-c', '10', ip
-                    ], capture_output=True, start_new_session=True
-                )
-
-                if response.returncode == 0:
-                    return Response(
-                    {
-                        "message": response.stdout.__dict__()
-                    }, status.HTTP_200_OK
+            response = subprocess.run(
+                [
+                    'ping', '-c', '10', ip
+                ], capture_output=True, start_new_session=True
             )
 
-            raise Exception('Informe um IP válido.')
-            
+            if response.returncode == 0:
+                return Response(
+                {
+                    "message": response.stdout.decode('utf-8')
+                }, status.HTTP_200_OK
+            )
+            raise Exception(f"Erro ao realizar o ping: {response.stdout.decode('utf-8')}")        
         except Exception as e:
             return Response(
                 {
